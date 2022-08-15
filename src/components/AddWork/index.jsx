@@ -121,7 +121,7 @@ function AddWork({
             <input hidden accept="image/*" type="file" />
           </Button>
         </DialogTitle>
-        <DialogContent sx={{ width: "500px" }}>
+        <DialogContent>
           <Typography
             variant="h5"
             sx={{
@@ -134,7 +134,7 @@ function AddWork({
             </Typography>
           </Typography>
 
-          <Stack direction={"row"} gap={2} sx={{ mt: "20px" }}>
+          <Stack direction={"row"} gap={2} flexWrap="wrap" sx={{ mt: "20px" }}>
             <FormControl size="small" fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
               <Select

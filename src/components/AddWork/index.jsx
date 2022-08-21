@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Button,
   Checkbox,
@@ -17,8 +18,9 @@ import {
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { Stack } from "@mui/system";
-import { includes } from "lodash";
-import React, { useState } from "react";
+import { filter, includes, join, map } from "lodash";
+import imageCompression from "browser-image-compression";
+import { some } from "lodash";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -26,7 +28,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const tagNames = ["latest", "furniture", "office"];
 
-const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 62;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
@@ -38,13 +40,17 @@ const MenuProps = {
 };
 
 function AddWork({
+  allData,
   file,
   setFile,
+  workTags,
   openDialog,
   setOpenDialog,
   alertMessage,
   setAlertMessage,
+  handleUploadSubmit,
 }) {
+  const [compressing, setCompressing] = useState(false);
   function handleClose() {
     setOpenDialog(false);
     setFile({
@@ -61,24 +67,46 @@ function AddWork({
     });
   }
 
-  function handleFileUpload(fileEvent) {
+  async function handleFileUpload(fileEvent) {
     if (!includes(fileEvent?.type, "image")) {
       setAlertMessage({
         open: true,
         severity: "error",
         message: "Please upload image only",
       });
-    } else if (fileEvent?.size >= 125000) {
+    } else if (some(allData, ["name", fileEvent.name])) {
       setAlertMessage({
         open: true,
         severity: "error",
-        message: "Image Size is greater than 1 MB",
+        message: "File already exists",
       });
-    } else {
+    } else if (fileEvent?.size <= 125000) {
       setFile({
         ...file,
         fileData: fileEvent,
       });
+    } else {
+      const options = {
+        maxSizeMB: 1,
+        useWebWorker: true,
+      };
+
+      try {
+        setCompressing(true);
+        const compressedFile = await imageCompression(fileEvent, options);
+        await setFile({
+          ...file,
+          fileData: compressedFile,
+        });
+        setCompressing(false);
+      } catch (error) {
+        setAlertMessage({
+          open: true,
+          severity: "error",
+          message: "Something went wrong !",
+        });
+        setCompressing(false);
+      }
     }
   }
 
@@ -130,7 +158,7 @@ function AddWork({
           >
             File :-{" "}
             <Typography variant="span" sx={{ opacity: 0.7 }}>
-              {file.fileData?.name}
+              {compressing ? "Compressing..." : file.fileData?.name}
             </Typography>
           </Typography>
 
@@ -144,13 +172,21 @@ function AddWork({
                 value={file.tags}
                 onChange={handleChangeTag}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={(selected) => {
+                  const data = filter(workTags, (item) =>
+                    includes(selected, item?.tagId)
+                  );
+                  return join(
+                    map(data, (item) => item?.title),
+                    ", "
+                  );
+                }}
                 MenuProps={MenuProps}
               >
-                {tagNames.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <Checkbox checked={file.tags.indexOf(name) > -1} />
-                    <ListItemText primary={name} />
+                {workTags.map((item) => (
+                  <MenuItem key={item?.id} value={item?.tagId}>
+                    <Checkbox checked={file.tags.indexOf(item?.tagId) > -1} />
+                    <ListItemText primary={item?.title} />
                   </MenuItem>
                 ))}
               </Select>
@@ -173,7 +209,7 @@ function AddWork({
           <Button size="small" onClick={handleClose}>
             Cancel
           </Button>
-          <Button size="small" variant="contained" onClick={handleClose}>
+          <Button size="small" variant="contained" onClick={handleUploadSubmit}>
             Upload
           </Button>
         </DialogActions>

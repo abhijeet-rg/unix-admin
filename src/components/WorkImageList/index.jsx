@@ -206,7 +206,7 @@ function WorkImageList() {
               </figure>
               <div className="detail">
                 <h6>
-                  {data.name}{" "}
+                  <span>{data.name}</span>
                   <DeleteForever
                     onClick={() =>
                       setDeleteDoc({
@@ -242,7 +242,7 @@ function WorkImageList() {
         open={deleteDocument.open}
         onClose={() => setDeleteDoc({ ...deleteDoc, open: false })}
       >
-        <DialogTitle>Are you sure to delete this Image ?</DialogTitle>
+        <DialogTitle>Are you sure to delete ?</DialogTitle>
         <DialogContent>{deleteDocument.name}</DialogContent>
         <DialogActions>
           <Button

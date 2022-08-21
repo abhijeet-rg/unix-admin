@@ -18,9 +18,8 @@ import {
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { Stack } from "@mui/system";
-import { filter, includes, join, map } from "lodash";
+import { filter, includes, join, map, some } from "lodash";
 import imageCompression from "browser-image-compression";
-import { some } from "lodash";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -216,6 +215,7 @@ function AddWork({
       </Dialog>
       <Snackbar
         open={alertMessage.open}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
         autoHideDuration={6000}
         onClose={handleAlertClose}
       >

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const WorkImageWrapper = styled.section`
-  padding: 50px 5%;
+  padding: 60px 5% 30px;
   font-family: "Open Sans", sans-serif;
 
   div.heading {
@@ -55,6 +55,13 @@ export const WorkImageListWrapper = styled.section`
       font-size: 14px;
       opacity: 0.8;
 
+      span {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
       svg {
         font-size: 18px;
         opacity: 0.9;
@@ -70,6 +77,9 @@ export const WorkImageListWrapper = styled.section`
     margin: 5px 0;
     font-size: 13px;
     opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   figure {

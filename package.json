@@ -16,11 +16,12 @@
     "@mui/material": "^5.10.0",
     "browser-image-compression": "^2.0.0",
     "firebase": "^9.9.2",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.24.0",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {

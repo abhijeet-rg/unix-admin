@@ -1,5 +1,6 @@
 import {
   Backdrop,
+  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -144,7 +145,7 @@ function WorkImageList() {
   }
 
   return (
-    <>
+    <Box>
       <WorkImageWrapper>
         <div className="heading">
           <h2>Add Work</h2>
@@ -264,7 +265,7 @@ function WorkImageList() {
       <Backdrop sx={{ color: "#fff", zIndex: "9999" }} open={progress}>
         <CircularProgress color="inherit" />
       </Backdrop>
-    </>
+    </Box>
   );
 }
 
